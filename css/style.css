@@ -123,8 +123,8 @@ main { position: relative; z-index: 1; }
   grid-template-rows: auto;
   grid-template-areas:
     "hero  hero  hero  info"
-    "lette lette rag   rag"
-    "lette lette llm   llm"
+    "rag   rag   lette lette"
+    "rag   rag   llm   llm"
     "skill skill skill skill"
     "edu   edu   cert  ach"
     "con   con   con   con";
@@ -207,22 +207,37 @@ main { position: relative; z-index: 1; }
   letter-spacing: 0.02em;
 }
 
-/* ── LETTE TILE (large, winner) ── */
-.tile-lette {
+/* ── RAG TILE (large, star project) ── */
+.tile-rag {
   display: flex; flex-direction: column; gap: 1rem;
-  background: linear-gradient(145deg, rgba(168,85,247,0.1) 0%, var(--surface) 55%);
-  border-color: rgba(168,85,247,0.4);
+  background: linear-gradient(145deg, rgba(99,102,241,0.12) 0%, var(--surface) 55%);
+  border-color: rgba(99,102,241,0.45);
 }
-.tile-lette:hover { border-color: rgba(168,85,247,0.7); transform: translateY(-3px); }
-.tile-lette .project-desc { flex: 1; }
+.tile-rag:hover { border-color: rgba(99,102,241,0.75); transform: translateY(-3px); }
+.tile-rag .project-desc { flex: 1; }
 
 /* ── PROJECT TILES ── */
-.tile-rag:hover, .tile-llm:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+.tile-lette { display: flex; flex-direction: column; gap: 1rem; }
+.tile-lette:hover, .tile-llm:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+
+/* ── METRICS ROW ── */
+.project-metrics {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-top: 0.85rem; padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+.metric-item {
+  display: flex; flex-direction: column; align-items: center;
+  background: rgba(168,85,247,0.07); border: 1px solid rgba(168,85,247,0.2);
+  border-radius: 8px; padding: 0.4rem 0.8rem; min-width: 58px;
+}
+.metric-val { font-size: 1rem; font-weight: 700; color: var(--accent); line-height: 1.2; }
+.metric-label { font-size: 0.62rem; color: var(--muted); text-align: center; margin-top: 0.1rem; white-space: nowrap; }
 
 .project-title {
   font-size: 1.1rem; font-weight: 700; margin: 0.4rem 0 0.2rem;
 }
-.tile-lette .project-title { font-size: 1.3rem; }
+.tile-rag .project-title { font-size: 1.3rem; }
 
 .project-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.6rem; }
 
@@ -354,15 +369,14 @@ footer a { color: var(--accent); text-decoration: none; }
     grid-template-areas:
       "hero  hero"
       "info  info"
-      "lette lette"
       "rag   rag"
+      "lette lette"
       "llm   llm"
       "skill skill"
       "edu   edu"
       "cert  ach"
       "con   con";
   }
-  .tile-lette { flex-direction: column; }
 }
 
 /* ── RESPONSIVE: mobile ── */
@@ -372,8 +386,8 @@ footer a { color: var(--accent); text-decoration: none; }
     grid-template-areas:
       "hero"
       "info"
-      "lette"
       "rag"
+      "lette"
       "llm"
       "skill"
       "edu"
