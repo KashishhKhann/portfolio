@@ -1,0 +1,444 @@
+/* ============================================================
+   CHAT HERO TILE
+   ============================================================ */
+
+/* Fixed frame. An explicit height (rather than a min/max range) means the
+   tile contributes exactly that much to grid row sizing — so the panel
+   never resizes as the conversation grows, and long answers scroll inside
+   .chat-log instead. On desktop this height also drives the two rows it
+   spans, keeping hero + info flush with it. */
+.tile-chat {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  height: 500px;
+  background: linear-gradient(160deg, rgba(168, 85, 247, 0.09) 0%, var(--surface) 45%);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+/* ── HEADER ── */
+.chat-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.85rem 1.1rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.chat-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 3px 14px rgba(168, 85, 247, 0.4);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.chat-id {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.chat-name {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* The shared "k" in as(k)ashish — tinted so the pun actually reads */
+.name-k {
+  color: var(--accent2);
+  font-weight: 800;
+}
+.name-k::before,
+.name-k::after {
+  color: var(--muted);
+  opacity: 0.55;
+  font-weight: 500;
+}
+.name-k::before { content: '('; }
+.name-k::after  { content: ')'; }
+
+.chat-status {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.chat-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+  animation: statusPulse 2.4s ease-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes statusPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+/* ── NEURAL NETWORK STRIP ──
+   Full-bleed band under the header so all five layers stay legible
+   even in the narrow column. Fires on every message send. */
+.nn-wrap {
+  width: 100%;
+  height: 40px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(168, 85, 247, 0.05), transparent);
+}
+
+#nn-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── MESSAGE LOG ── */
+.chat-log {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  scroll-behavior: smooth;
+  min-height: 0;
+}
+
+.chat-log::-webkit-scrollbar { width: 6px; }
+.chat-log::-webkit-scrollbar-track { background: transparent; }
+.chat-log::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.3);
+  border-radius: 99px;
+}
+.chat-log::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.55); }
+
+.msg {
+  display: flex;
+  max-width: 100%;
+  animation: msgIn 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg-user { justify-content: flex-end; }
+.msg-bot  { justify-content: flex-start; }
+
+.bubble {
+  max-width: 86%;
+  padding: 0.7rem 0.95rem;
+  border-radius: 14px;
+  font-size: 0.855rem;
+  line-height: 1.68;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.msg-user .bubble {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border-bottom-right-radius: 5px;
+  box-shadow: 0 3px 16px rgba(168, 85, 247, 0.28);
+  font-weight: 500;
+}
+
+.msg-bot .bubble {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-bottom-left-radius: 5px;
+}
+
+.msg-bot .bubble p + p { margin-top: 0.65rem; }
+
+/* ── TYPING INDICATOR ── */
+.bubble.typing {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 0.85rem 1rem;
+}
+
+.bubble.typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.4;
+  animation: blink 1.3s infinite ease-in-out;
+}
+.bubble.typing span:nth-child(2) { animation-delay: 0.18s; }
+.bubble.typing span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes blink {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30%           { opacity: 1;    transform: translateY(-3px); }
+}
+
+/* ── MESSAGE EXTRAS (tags / links / jump) ── */
+.msg-extras {
+  margin-top: 0.75rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.msg-extras.show { opacity: 1; transform: translateY(0); }
+
+.msg-tags .tag { font-size: 0.66rem; }
+
+.msg-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.msg-link {
+  font-size: 0.79rem;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.35);
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.msg-link:hover { color: #e879f9; border-color: #e879f9; }
+
+.jump-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  cursor: pointer !important;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.jump-btn:hover {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.jump-btn svg { flex-shrink: 0; }
+
+/* ── SUGGESTION CHIPS ── */
+.chat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0 1.1rem 0.7rem;
+  flex-shrink: 0;
+}
+.chat-chips:empty { padding-bottom: 0; }
+
+.chip {
+  font-family: inherit;
+  font-size: 0.74rem;
+  padding: 0.34rem 0.8rem;
+  border-radius: 99px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  cursor: pointer !important;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+  animation: msgIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.chip:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+/* ── INPUT ROW ── */
+.chat-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.8rem 0.8rem;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.chat-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 11px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 0;
+}
+.chat-input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.13);
+}
+
+.chat-prompt {
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+#chat-input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.855rem;
+  cursor: text !important;
+}
+#chat-input::placeholder { color: rgba(184, 169, 217, 0.5); }
+#chat-input:disabled { opacity: 0.55; }
+
+.chat-send {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 11px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 3px 14px rgba(168, 85, 247, 0.32);
+  cursor: pointer !important;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.chat-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.42);
+}
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed !important; }
+
+.chat-foot {
+  font-size: 0.65rem;
+  color: var(--muted);
+  opacity: 0.72;
+  text-align: center;
+  padding: 0 1.1rem 0.75rem;
+  line-height: 1.5;
+}
+
+/* ── TILE FLASH (jump target highlight) ── */
+@keyframes tileFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);   border-color: var(--border); }
+  18%  { box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.32); border-color: var(--accent); }
+  100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);   border-color: var(--border); }
+}
+.tile-flash { animation: tileFlash 1.9s ease-out; }
+
+/* ── DESKTOP: narrow, double-height panel ──
+   The chat spans 6 of 16 grid tracks (~420px) across two rows, so type
+   and spacing tighten slightly to suit a messenger-width column. */
+@media (min-width: 901px) {
+  .tile-chat { height: 540px; }
+
+  .chat-head { padding: 0.75rem 0.9rem 0.65rem; }
+  .chat-avatar { width: 28px; height: 28px; border-radius: 8px; font-size: 0.66rem; }
+  .chat-name { font-size: 0.82rem; }
+  .chat-status { font-size: 0.66rem; }
+
+  .chat-log { padding: 0.95rem 0.9rem; gap: 0.75rem; }
+  .bubble {
+    max-width: 90%;
+    font-size: 0.82rem;
+    line-height: 1.64;
+    padding: 0.65rem 0.85rem;
+  }
+  .msg-bot .bubble p + p { margin-top: 0.6rem; }
+  .msg-tags .tag { font-size: 0.64rem; padding: 0.16rem 0.5rem; }
+  .msg-link { font-size: 0.755rem; }
+  .msg-links { gap: 0.8rem; }
+  .jump-btn { font-size: 0.72rem; padding: 0.36rem 0.7rem; }
+
+  .chat-chips { padding: 0 0.9rem 0.6rem; gap: 0.35rem; }
+  .chip { font-size: 0.705rem; padding: 0.3rem 0.65rem; }
+
+  .chat-form { padding: 0.6rem 0.7rem 0.65rem; gap: 0.45rem; }
+  .chat-input-wrap { padding: 0.5rem 0.8rem; border-radius: 10px; }
+  #chat-input { font-size: 0.815rem; }
+  .chat-send { width: 35px; height: 35px; border-radius: 10px; }
+  .chat-foot { font-size: 0.62rem; padding: 0 0.9rem 0.65rem; }
+
+  /* Info tile is a wide slim bar now, so lay its links out horizontally */
+  .tile-info {
+    justify-content: center;
+    gap: 0.85rem;
+  }
+  .tile-info .info-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.75rem;
+    flex: 0;
+  }
+}
+
+/* ── WANT IT WIDER / NARROWER STILL? ──
+   The desktop grid in style.css has 16 tracks. The chat starts at track
+   12 and runs to the end; the hero and info tiles end where it begins.
+   To resize, move that one boundary in both places:
+     .tile-chat { grid-column: 11 / 17; }   ← lower 11 = wider chat
+     .tile-hero, .tile-info { grid-column: 1 / 11; }
+   One track is ~73px. Nothing below row 2 is affected.
+   Height is set independently by .tile-chat { height: ... }. */
+
+/* ── RESPONSIVE ── */
+@media (max-width: 560px) {
+  .tile-chat { height: 440px; }
+  .chat-log { padding: 0.9rem; }
+  .bubble { max-width: 92%; font-size: 0.83rem; }
+  .nn-wrap { height: 34px; }
+  .chat-chips { padding: 0 0.9rem 0.6rem; }
+  .chat-form { padding: 0.6rem; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .msg, .chip { animation: none; }
+  .chat-status::before { animation: none; }
+  .tile-flash { animation: none; border-color: var(--accent) !important; }
+  .chat-log { scroll-behavior: auto; }
+}

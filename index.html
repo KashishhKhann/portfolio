@@ -15,7 +15,8 @@
   <meta property="og:description"
     content="MSc AI graduate · Hackathon winner · NLP, LLM & RAG systems · Based in Dublin, Ireland." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://kashishkhann.dev" />
+  <meta property="og:url" content="https://kashishhkhann.github.io/portfolio/" />
+  <link rel="canonical" href="https://kashishhkhann.github.io/portfolio/" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Kashish Khan — AI/ML Engineer" />
   <meta name="twitter:description"
@@ -23,6 +24,7 @@
   <link rel="icon"
     href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚡%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/chat.css" />
 </head>
 
 <body>
@@ -34,6 +36,7 @@
     <span class="nav-logo">KK</span>
     <ul class="nav-links" id="nav-links">
       <li><a href="#about">About</a></li>
+      <li><a href="#chat">Ask</a></li>
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
       <li><a href="#education">Education</a></li>
@@ -103,6 +106,43 @@
         <div class="info-footer">Available immediately</div>
       </div>
 
+      <!-- ── CHAT ── -->
+      <div class="tile tile-chat fade-in" id="chat">
+
+        <div class="chat-head">
+          <div class="chat-avatar" aria-hidden="true">KK</div>
+          <div class="chat-id">
+            <span class="chat-name">as<span class="name-k">k</span>ashish.ai</span>
+            <span class="chat-status">Online</span>
+          </div>
+        </div>
+
+        <div class="nn-wrap" aria-hidden="true">
+          <canvas id="nn-canvas"></canvas>
+        </div>
+
+        <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+        <div class="chat-chips" id="chat-chips"></div>
+
+        <form class="chat-form" id="chat-form" autocomplete="off">
+          <div class="chat-input-wrap">
+            <span class="chat-prompt" aria-hidden="true">&gt;</span>
+            <label for="chat-input" class="sr-only">Ask about Kashish's work</label>
+            <input type="text" id="chat-input" placeholder="Ask me anything…" maxlength="200" />
+          </div>
+          <button type="submit" class="chat-send" id="chat-send" aria-label="Send message">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </button>
+        </form>
+
+        <p class="chat-foot">Deterministic intent matcher — no API key, no hallucinated answers.</p>
+      </div>
+
       <!-- ── LETTE ── -->
       <div class="tile tile-lette fade-in">
         <div>
@@ -111,9 +151,13 @@
           <p class="project-sub">GiveAGo × Lette AI · 2026</p>
         </div>
         <ul class="project-desc">
-          <li>Won the Lette AI track at GiveAGo 2026; received direct outreach from the Lette co-founder regarding open engineering roles.</li>
-          <li>Five-module pipeline: JSON email parsing → rule-based issue classification → deterministic urgency scoring → thread-level aggregation → Streamlit UI with ranked queue, filters, and per-thread timeline.</li>
-          <li>Hybrid design: deterministic scoring handles all triage without API dependency; GPT-4o-mini enrichment adds thread summaries and recommended actions only where needed, with graceful deterministic fallback if the LLM is unavailable.</li>
+          <li>Won the Lette AI track at GiveAGo 2026; received direct outreach from the Lette co-founder regarding open
+            engineering roles.</li>
+          <li>Five-module pipeline: JSON email parsing → rule-based issue classification → deterministic urgency scoring
+            → thread-level aggregation → Streamlit UI with ranked queue, filters, and per-thread timeline.</li>
+          <li>Hybrid design: deterministic scoring handles all triage without API dependency; GPT-4o-mini enrichment
+            adds thread summaries and recommended actions only where needed, with graceful deterministic fallback if the
+            LLM is unavailable.</li>
         </ul>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Streamlit</span><span class="tag">OpenAI API</span>
@@ -147,10 +191,18 @@
           <p class="project-sub">NLP / Knowledge Graph / RAG · 2025–2026</p>
         </div>
         <ul class="project-desc">
-          <li>End-to-end five-stage pipeline over 50,000+ MIMIC-IV clinical notes: section-aware chunking (7 note types, type-specific token targets) → BioClinicalBERT embeddings (768-dim, CLS pooling) → FAISS indexing → Neo4j knowledge graph → hybrid retrieval.</li>
-          <li>Hybrid ranking combining dense FAISS retrieval (85% weight), BM25 lexical reranking (25%), KG concept overlap with IDF-style frequency penalties (15%), and section-bias inference — catching exact drug names and ICD codes that dense models miss.</li>
-          <li>Child-span refinement re-segments parent chunks into sub-spans and re-ranks by cosine similarity at query time, achieving sentence-level precision without storage overhead. Within-admission scoping prevents cross-patient data leakage.</li>
-          <li>Fine-tuned BioClinicalBERT for clinical NER; entities enriched with ICD-10/ICD-9 codes and stored as Neo4j concept nodes. Evaluated across 50 tasks / 107 cases with ROUGE-L, BERTScore F1, hit@k, and precision@k.</li>
+          <li>End-to-end five-stage pipeline over 50,000+ MIMIC-IV clinical notes: section-aware chunking (7 note types,
+            type-specific token targets) → BioClinicalBERT embeddings (768-dim, CLS pooling) → FAISS indexing → Neo4j
+            knowledge graph → hybrid retrieval.</li>
+          <li>Hybrid ranking combining dense FAISS retrieval (85% weight), BM25 lexical reranking (25%), KG concept
+            overlap with IDF-style frequency penalties (15%), and section-bias inference — catching exact drug names and
+            ICD codes that dense models miss.</li>
+          <li>Child-span refinement re-segments parent chunks into sub-spans and re-ranks by cosine similarity at query
+            time, achieving sentence-level precision without storage overhead. Within-admission scoping prevents
+            cross-patient data leakage.</li>
+          <li>Fine-tuned BioClinicalBERT for clinical NER; entities enriched with ICD-10/ICD-9 codes and stored as Neo4j
+            concept nodes. Evaluated across 50 tasks / 107 cases with ROUGE-L, BERTScore F1, hit@k, and precision@k.
+          </li>
         </ul>
         <div class="tags">
           <span class="tag">BioClinicalBERT</span><span class="tag">FAISS</span><span class="tag">Neo4j</span>
@@ -159,8 +211,10 @@
         </div>
         <div class="project-metrics">
           <div class="metric-item"><span class="metric-val">~1.0</span><span class="metric-label">Hit@5</span></div>
-          <div class="metric-item"><span class="metric-val">89.7%</span><span class="metric-label">Section Hit@k</span></div>
-          <div class="metric-item"><span class="metric-val">0.77</span><span class="metric-label">BERTScore F1</span></div>
+          <div class="metric-item"><span class="metric-val">89.7%</span><span class="metric-label">Section Hit@k</span>
+          </div>
+          <div class="metric-item"><span class="metric-val">0.77</span><span class="metric-label">BERTScore F1</span>
+          </div>
           <div class="metric-item"><span class="metric-val">107</span><span class="metric-label">Eval Cases</span></div>
         </div>
       </div>
@@ -171,8 +225,10 @@
         <h2 class="project-title">LLM Trace &amp; Cost Studio</h2>
         <p class="project-sub">Azure / Docker / FastAPI · 2025–2026</p>
         <ul class="project-desc">
-          <li>Self-hosted LLM observability platform (LangSmith-lite): FastAPI backend, Streamlit dashboard, SQLite store, Docker Compose — deployed to Azure Container Apps.</li>
-          <li>Captured per-request latency, token usage, and cost across LangChain pipelines; built deterministic chunk-ID mapping and embedding-drift mitigation.</li>
+          <li>Self-hosted LLM observability platform (LangSmith-lite): FastAPI backend, Streamlit dashboard, SQLite
+            store, Docker Compose — deployed to Azure Container Apps.</li>
+          <li>Captured per-request latency, token usage, and cost across LangChain pipelines; built deterministic
+            chunk-ID mapping and embedding-drift mitigation.</li>
         </ul>
         <div class="tags">
           <span class="tag">FastAPI</span><span class="tag">Docker</span><span class="tag">Azure Container Apps</span>
@@ -314,6 +370,7 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <script src="js/chat.js"></script>
 </body>
 
 </html>
