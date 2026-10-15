@@ -553,7 +553,7 @@ function jumpTo(id) {
       c.beginPath();
       c.moveTo(e.a.x, e.a.y);
       c.lineTo(e.b.x, e.b.y);
-      c.strokeStyle = `rgba(168,85,247,${alpha})`;
+      c.strokeStyle = `rgba(255, 130, 169,${alpha})`;
       c.lineWidth = 0.6 + e.act * 1.1;
       c.stroke();
     });
@@ -569,8 +569,8 @@ function jumpTo(id) {
 
       if (n.act > 0.02) {
         const g = c.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 4.5);
-        g.addColorStop(0, `rgba(236,72,153,${0.4 * n.act})`);
-        g.addColorStop(1, 'rgba(236,72,153,0)');
+        g.addColorStop(0, `rgba(127, 149, 209,${0.4 * n.act})`);
+        g.addColorStop(1, 'rgba(127, 149, 209,0)');
         c.beginPath();
         c.arc(n.x, n.y, r * 4.5, 0, Math.PI * 2);
         c.fillStyle = g;
@@ -582,7 +582,7 @@ function jumpTo(id) {
       const mix = n.act;
       c.fillStyle = mix > 0.02
         ? `rgba(${Math.round(168 + 68 * mix)},${Math.round(85 - 13 * mix)},${Math.round(247 - 94 * mix)},${0.45 + 0.55 * mix})`
-        : `rgba(168,85,247,${0.28 + idle * 0.22})`;
+        : `rgba(255, 130, 169,${0.28 + idle * 0.22})`;
       c.fill();
     });
 
