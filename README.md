@@ -4,7 +4,7 @@ Personal portfolio website built with HTML, CSS, and JavaScript. Live at [portfo
 
 ## Stack
 
-- Vanilla HTML / CSS / JavaScript — no framework
+- Vanilla HTML, CSS and JavaScript, no framework
 - Deployed on Vercel (auto-deploys on push to main)
 
 ## Structure
@@ -19,4 +19,4 @@ portfolio/
 
 ## Running locally
 
-Open `index.html` directly in a browser — no build step required.
+Open `index.html` directly in a browser. No build step required.

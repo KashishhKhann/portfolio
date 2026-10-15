@@ -11,7 +11,7 @@
 *.swp
 *~
 
-# Node — in case build tooling gets added later
+# Node, in case build tooling gets added later
 node_modules/
 npm-debug.log*
 yarn-error.log*

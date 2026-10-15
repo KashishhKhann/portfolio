@@ -27,7 +27,7 @@ html { scroll-behavior: smooth; }
   clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
-/* Custom cursor only on real pointer devices — preserves accessibility on touch/keyboard */
+/* Custom cursor only on real pointer devices; preserves accessibility on touch/keyboard */
 @media (hover: hover) and (pointer: fine) {
   *, *::before, *::after { cursor: none !important; }
 }
@@ -125,7 +125,7 @@ main { position: relative; z-index: 1; }
 
 /* ── BENTO GRID ── */
 /* 16 narrow tracks instead of 4 wide ones. Every tile from row 3 down
-   still spans a multiple of 4 tracks, so their widths are unchanged —
+   still spans a multiple of 4 tracks, so their widths are unchanged;
    the finer grid exists purely so the chat can take 6 tracks instead of
    4, with hero and info absorbing the difference. */
 .bento {

@@ -1,11 +1,11 @@
 /* ============================================================
-   as(k)ashish.ai — portfolio chat interface
+   as(k)ashish.ai: portfolio chat interface
    ------------------------------------------------------------
    Currently backed by a deterministic intent matcher (no network,
    no API key, works on static hosting).
 
    To swap in a real LLM later, set CHAT_CONFIG.endpoint to a
-   serverless function URL. Everything else stays the same — the
+   serverless function URL. Everything else stays the same, the
    UI only ever talks to getAnswer().
    ============================================================ */
 
@@ -17,8 +17,8 @@ const CHAT_CONFIG = {
 
 /* ---------- KNOWLEDGE BASE ----------
    Each intent has:
-     strong   — distinctive terms; a hit here is near-decisive
-     keywords — supporting terms; weaker, additive
+     strong:   distinctive terms; a hit here is near-decisive
+     keywords: supporting terms; weaker, additive
    plus an answer, optional tags, links, and a tile to jump to.
    All matching is word-boundary aware, so "hi" won't fire on "him". */
 
@@ -30,7 +30,7 @@ const KB = [
     id: 'greeting',
     greetingOnly: true,
     strong: [], keywords: [],
-    answer: "Hey — I'm the chat layer on Kashish's portfolio. Ask me about her projects, stack, or background and I'll pull the relevant details and point you at the right section.",
+    answer: "Hey! I'm the chat layer on Kashish's portfolio. Ask me about her projects, stack, or background and I'll pull the relevant details and point you at the right section.",
     chips: ['What does she build?', 'Best project?', 'Is she available?']
   },
   {
@@ -38,7 +38,7 @@ const KB = [
     strong: ['who are you', 'who is he', 'who is kashish', 'tell me about yourself', 'background',
       'introduce', 'what do you do', 'what does he do', 'bio'],
     keywords: ['about', 'yourself', 'summary', 'overview', 'who'],
-    answer: "Kashish Khan — NLP and LLM engineer based in Dublin, Ireland. MSc in Artificial Intelligence (Dublin Business School, 2026) on top of an MCA from Amity University.\n\nThe work is mostly retrieval systems: RAG pipelines, knowledge graphs, embedding search, and the FastAPI + Docker plumbing to run them in production. Won the Lette AI track at Give(A)Go 2026. Currently open to AI/ML engineering roles in Ireland.",
+    answer: "Kashish Khan, NLP and LLM engineer based in Dublin, Ireland. MSc in Artificial Intelligence (Dublin Business School, 2026) on top of an MCA from Amity University.\n\nThe work is mostly retrieval systems: RAG pipelines, knowledge graphs, embedding search, and the FastAPI + Docker plumbing to run them in production. Won the Lette AI track at Give(A)Go 2026. Currently open to AI/ML engineering roles in Ireland.",
     target: 'about',
     targetLabel: 'About',
     chips: ['Show me the projects', 'What is her stack?', 'Education?']
@@ -48,7 +48,7 @@ const KB = [
     strong: ['projects', 'what have you built', 'what has he built', 'case studies',
       'what do you build', 'what does he build', 'portfolio'],
     keywords: ['project', 'built', 'build', 'builds', 'things you made', 'show me'],
-    answer: "Three main builds:\n\n1. GraphRAG Clinical Decision Support — MSc dissertation. Hybrid retrieval over 50,000+ MIMIC-IV clinical notes using BioClinicalBERT, FAISS and a Neo4j knowledge graph.\n\n2. Lette Inbox Copilot — hackathon winner. Deterministic email triage with optional LLM enrichment and graceful fallback.\n\n3. LLM Trace & Cost Studio — self-hosted LLM observability, a LangSmith-lite deployed to Azure Container Apps.\n\nAsk about any of them for the detail.",
+    answer: "Three main builds:\n\n1. GraphRAG Clinical Decision Support, the MSc dissertation. Hybrid retrieval over 50,000+ MIMIC-IV clinical notes using BioClinicalBERT, FAISS and a Neo4j knowledge graph.\n\n2. Lette Inbox Copilot, the hackathon winner. Deterministic email triage with optional LLM enrichment and graceful fallback.\n\n3. LLM Trace & Cost Studio, a self-hosted LLM observability, a LangSmith-lite deployed to Azure Container Apps.\n\nAsk about any of them for the detail.",
     target: 'projects',
     targetLabel: 'Projects',
     chips: ['Tell me about GraphRAG', 'The hackathon one', 'LLM Trace Studio']
@@ -60,7 +60,7 @@ const KB = [
       'star project', 'knowledge graph'],
     keywords: ['medical', 'healthcare', 'retrieval', 'embeddings', 'embedding', 'vector search',
       'reranking', 'hybrid search', 'chunking'],
-    answer: "GraphRAG Clinical Decision Support — the MSc dissertation, and the deepest build here.\n\nFive-stage pipeline over 50,000+ MIMIC-IV clinical notes: section-aware chunking across 7 note types with type-specific token targets → BioClinicalBERT embeddings (768-dim, CLS pooling) → FAISS indexing → Neo4j knowledge graph → hybrid retrieval.\n\nRanking blends dense FAISS retrieval (85%), BM25 lexical reranking (25%), knowledge-graph concept overlap with IDF-style frequency penalties (15%), and inferred section bias — which is what catches exact drug names and ICD codes that dense models miss on their own.\n\nChild-span refinement re-segments parent chunks at query time and re-ranks by cosine similarity, giving sentence-level precision without extra storage. Within-admission scoping prevents cross-patient leakage.\n\nResults across 50 tasks / 107 cases: ~1.0 hit@5, 89.7% section hit@k, 0.77 BERTScore F1.",
+    answer: "GraphRAG Clinical Decision Support is the MSc dissertation, and the deepest build here.\n\nFive-stage pipeline over 50,000+ MIMIC-IV clinical notes: section-aware chunking across 7 note types with type-specific token targets → BioClinicalBERT embeddings (768-dim, CLS pooling) → FAISS indexing → Neo4j knowledge graph → hybrid retrieval.\n\nRanking blends dense FAISS retrieval (85%), BM25 lexical reranking (25%), knowledge-graph concept overlap with IDF-style frequency penalties (15%), and inferred section bias. That combination is what catches exact drug names and ICD codes that dense models miss on their own.\n\nChild-span refinement re-segments parent chunks at query time and re-ranks by cosine similarity, giving sentence-level precision without extra storage. Within-admission scoping prevents cross-patient leakage.\n\nResults across 50 tasks / 107 cases: ~1.0 hit@5, 89.7% section hit@k, 0.77 BERTScore F1.",
     tags: ['BioClinicalBERT', 'FAISS', 'Neo4j', 'MongoDB', 'LangChain', 'Docker', 'spaCy', 'BM25'],
     target: 'projects',
     targetLabel: 'the full breakdown',
@@ -71,7 +71,7 @@ const KB = [
     strong: ['why knowledge graph', 'why a knowledge graph', 'why a graph', 'why neo4j', 'why kg',
       'graph vs vector', 'why not just vector', 'cypher'],
     keywords: [],
-    answer: "Because pure vector search flattens structure. Clinical notes have relationships — this admission, this patient, this diagnosis code, this medication — and cosine similarity throws all of that away.\n\nThe Neo4j layer stores NER-extracted entities as concept nodes enriched with ICD-10/ICD-9 codes. At retrieval time, concept overlap between the query and a candidate chunk becomes a scoring signal, with IDF-style penalties so common concepts don't dominate. It also gives clean scoping — within-admission constraints stop the retriever leaking across patients, which a flat index can't enforce.",
+    answer: "Because pure vector search flattens structure. Clinical notes have relationships (this admission, this patient, this diagnosis code, this medication), and cosine similarity throws all of that away.\n\nThe Neo4j layer stores NER-extracted entities as concept nodes enriched with ICD-10/ICD-9 codes. At retrieval time, concept overlap between the query and a candidate chunk becomes a scoring signal, with IDF-style penalties so common concepts don't dominate. It also gives clean scoping: within-admission constraints stop the retriever leaking across patients, which a flat index can't enforce.",
     tags: ['Neo4j', 'Cypher', 'spaCy', 'NetworkX'],
     target: 'projects',
     targetLabel: 'Projects'
@@ -80,7 +80,7 @@ const KB = [
     id: 'lette',
     strong: ['lette', 'hackathon', 'giveago', 'give a go', 'inbox copilot', 'inbox', 'email triage'],
     keywords: ['won', 'win', 'winner', 'award', 'copilot', 'competition', 'prize', 'triage'],
-    answer: "Lette Inbox Copilot — won the Lette AI track at Give(A)Go 2026, and the Lette co-founder followed up directly about open engineering roles.\n\nFive-module pipeline: JSON email parsing → rule-based issue classification → deterministic urgency scoring → thread-level aggregation → a Streamlit UI with a ranked queue, filters, and per-thread timeline.\n\nThe design decision worth noting: triage is fully deterministic, so it works with zero API dependency. GPT-4o-mini only adds thread summaries and recommended actions on top, and falls back cleanly to the deterministic path if the LLM is unavailable. Judges liked that it degrades instead of breaking.",
+    answer: "Lette Inbox Copilot won the Lette AI track at Give(A)Go 2026, and the Lette co-founder followed up directly about open engineering roles.\n\nFive-module pipeline: JSON email parsing → rule-based issue classification → deterministic urgency scoring → thread-level aggregation → a Streamlit UI with a ranked queue, filters, and per-thread timeline.\n\nThe design decision worth noting: triage is fully deterministic, so it works with zero API dependency. GPT-4o-mini only adds thread summaries and recommended actions on top, and falls back cleanly to the deterministic path if the LLM is unavailable. Judges liked that it degrades instead of breaking.",
     tags: ['Python', 'Streamlit', 'OpenAI API', 'GPT-4o-mini', 'Rule-based NLP'],
     links: [
       { label: 'GitHub', url: 'https://github.com/KashishhKhann/Lette' },
@@ -95,7 +95,7 @@ const KB = [
     strong: ['llm trace', 'trace', 'observability', 'langsmith', 'cost studio', 'tracing'],
     keywords: ['cost', 'monitoring', 'mlops', 'azure', 'container apps', 'deployment', 'deploy',
       'devops', 'infra', 'infrastructure', 'production', 'fastapi', 'docker'],
-    answer: "LLM Trace & Cost Studio — a self-hosted LLM observability platform, essentially a LangSmith-lite.\n\nFastAPI backend, Streamlit dashboard, SQLite store, Docker Compose, deployed to Azure Container Apps. It captures per-request latency, token usage, and cost across LangChain pipelines, with deterministic chunk-ID mapping and embedding-drift mitigation so traces stay meaningful as indexes get rebuilt.\n\nBuilt it because debugging RAG without per-request cost and latency visibility is guesswork.",
+    answer: "LLM Trace & Cost Studio is a self-hosted LLM observability platform, essentially a LangSmith-lite.\n\nFastAPI backend, Streamlit dashboard, SQLite store, Docker Compose, deployed to Azure Container Apps. It captures per-request latency, token usage, and cost across LangChain pipelines, with deterministic chunk-ID mapping and embedding-drift mitigation so traces stay meaningful as indexes get rebuilt.\n\nBuilt it because debugging RAG without per-request cost and latency visibility is guesswork.",
     tags: ['FastAPI', 'Docker', 'Azure Container Apps', 'LangChain', 'SQLite', 'Streamlit'],
     target: 'projects',
     targetLabel: 'Projects'
@@ -117,7 +117,7 @@ const KB = [
       'academic', 'qualifications', 'dublin business school', 'amity', 'where did he study',
       'where did you study', 'certifications'],
     keywords: ['studied', 'study', 'school', 'grades', 'course', 'modules', 'graduate'],
-    answer: "Two master's degrees.\n\nMSc Artificial Intelligence — Dublin Business School, 2025–2026. Dissertation on GraphRAG for clinical decision support. Modules covered advanced NLP, deep reinforcement learning, cognitive & ethical AI, and cloud computing. Also built MiniBioClinicalBERT from scratch in Julia.\n\nMCA (Master of Computer Applications) — Amity University, India, 2022–2024. Advanced software engineering, data structures, algorithms and databases, with full-stack and data-driven projects in Python, Java and SQL.\n\nCertifications: Google Cloud Computing Foundations (2023), Workato Automation Pro I (2024).",
+    answer: "Two master's degrees.\n\nMSc Artificial Intelligence, Dublin Business School, 2025–2026. Dissertation on GraphRAG for clinical decision support. Modules covered advanced NLP, deep reinforcement learning, cognitive & ethical AI, and cloud computing. Also built MiniBioClinicalBERT from scratch in Julia.\n\nMCA (Master of Computer Applications), Amity University, India, 2022–2024. Advanced software engineering, data structures, algorithms and databases, with full-stack and data-driven projects in Python, Java and SQL.\n\nCertifications: Google Cloud Computing Foundations (2023), Workato Automation Pro I (2024).",
     target: 'education',
     targetLabel: 'Education',
     chips: ['What is her stack?', 'Show me the projects']
@@ -126,7 +126,7 @@ const KB = [
     id: 'transformer',
     strong: ['from scratch', 'built from scratch', 'transformer', 'minibioclinicalbert', 'julia', 'flux'],
     keywords: ['implement', 'attention'],
-    answer: "MiniBioClinicalBERT — a transformer implemented from scratch in Julia during the MSc, rather than assembled from HuggingFace parts.\n\nWorth doing for one reason: once you've written the attention mechanism, positional encoding and training loop by hand, the failure modes of the models you use in production stop being mysterious. It's the reason the GraphRAG retriever tuning was a set of informed decisions rather than hyperparameter roulette.",
+    answer: "MiniBioClinicalBERT is a transformer implemented from scratch in Julia during the MSc, rather than assembled from HuggingFace parts.\n\nWorth doing for one reason: once you've written the attention mechanism, positional encoding and training loop by hand, the failure modes of the models you use in production stop being mysterious. It's the reason the GraphRAG retriever tuning was a set of informed decisions rather than hyperparameter roulette.",
     tags: ['Julia', 'Flux.jl', 'Transformers'],
     target: 'education',
     targetLabel: 'Education'
@@ -136,7 +136,7 @@ const KB = [
     strong: ['contact', 'get in touch', 'reach out', 'email', 'linkedin', 'github', 'recruiter',
       'interview'],
     keywords: ['reach', 'talk', 'connect', 'message', 'call', 'socials', 'hire', 'hiring'],
-    answer: "Best route is email: kashishkhann100@gmail.com — that's checked daily.\n\nLinkedIn and GitHub are both linked below, and there's a Contact section at the bottom of the page with the same details.",
+    answer: "Best route is email: kashishkhann100@gmail.com, which is checked daily.\n\nLinkedIn and GitHub are both linked below, and there's a Contact section at the bottom of the page with the same details.",
     links: [
       { label: 'Email', url: 'mailto:kashishkhann100@gmail.com' },
       { label: 'LinkedIn', url: 'https://linkedin.com/in/kashish-k-258b72305' },
@@ -150,7 +150,7 @@ const KB = [
     id: 'resume',
     strong: ['resume', 'cv', 'curriculum vitae', 'download'],
     keywords: ['pdf', 'curriculum'],
-    answer: "The CV is a one-click download — link below, or the button in the hero section.",
+    answer: "The CV is a one-click download. Use the link below, or the button in the hero section.",
     links: [{ label: 'Download Resume (PDF)', url: 'Resume.pdf', download: true }],
     target: 'about',
     targetLabel: 'the hero'
@@ -179,7 +179,7 @@ const KB = [
     strong: ['why hire', 'why should', 'strengths', 'stand out', 'differentiator', 'what makes you',
       'what makes him', 'elevator pitch', 'why you'],
     keywords: ['good at', 'pitch', 'sell', 'best at', 'unique'],
-    answer: "Three honest reasons.\n\nShe ships systems, not notebooks. Every project here has a deployment story — Docker, FastAPI, Azure — not just a working cell.\n\nShe designs for failure. The hackathon winner runs entirely without an LLM if the API is down; the LLM only enriches. That instinct is rarer than it should be.\n\nShe's measured the work. Hit@5, section hit@k, BERTScore F1 across 107 evaluation cases — the retrieval claims come with numbers attached.",
+    answer: "Three honest reasons.\n\nShe ships systems, not notebooks. Every project here has a deployment story (Docker, FastAPI, Azure), not just a working cell.\n\nShe designs for failure. The hackathon winner runs entirely without an LLM if the API is down; the LLM only enriches. That instinct is rarer than it should be.\n\nShe's measured the work. Hit@5, section hit@k, BERTScore F1 across 107 evaluation cases, so the retrieval claims come with numbers attached.",
     chips: ['Show me the projects', 'How do I get in touch?']
   },
   {
@@ -189,13 +189,13 @@ const KB = [
       'actually ai', 'actually an llm', 'a bot', 'really ai',
       'how were you built', 'what model', 'who built this', 'how does this chat work'],
     keywords: ['gpt', 'fake', 'bot', 'prompt'],
-    answer: "Fair question, and the honest answer: right now I'm a deterministic intent matcher, not a language model. Your message gets tokenised and scored against a keyword-weighted knowledge base, and the top-scoring intent returns a written answer. No API call, no key to leak, works on static hosting.\n\nThe interface was built with a clean swap point — one async function — so a real retrieval-augmented backend can drop in behind it without touching the UI. Which is, appropriately, the same architecture as the Lette project: deterministic core, LLM as enrichment.",
+    answer: "Fair question, and the honest answer: right now I'm a deterministic intent matcher, not a language model. Your message gets tokenised and scored against a keyword-weighted knowledge base, and the top-scoring intent returns a written answer. No API call, no key to leak, works on static hosting.\n\nThe interface was built with a clean swap point (one async function), so a real retrieval-augmented backend can drop in behind it without touching the UI. Which is, appropriately, the same architecture as the Lette project: deterministic core, LLM as enrichment.",
     chips: ['Show me the projects', 'What is her stack?']
   }
 ];
 
 const FALLBACK = {
-  answer: "I don't have a good answer for that one — my knowledge base only covers Kashish's work, stack and background.\n\nTry one of these, or email her directly at kashishkhann100@gmail.com.",
+  answer: "I don't have a good answer for that one. My knowledge base only covers Kashish's work, stack and background.\n\nTry one of these, or email her directly at kashishkhann100@gmail.com.",
   chips: ['What does she build?', 'What is her stack?', 'Education?', 'How do I get in touch?']
 };
 
@@ -216,7 +216,7 @@ const SCORE = { strong: 5, phrase: 2, exact: 1.5, stem: 0.8 };
 const THRESHOLD = 1.5;
 
 /* Pronouns are folded to a single canonical form so the keyword lists
-   below stay short — a visitor can type "her stack" or "his stack" and
+   below stay short: a visitor can type "her stack" or "his stack" and
    both route to the same intent. */
 function normalise(s) {
   return s.toLowerCase()
@@ -227,7 +227,7 @@ function normalise(s) {
     .trim();
 }
 
-/* Word-boundary phrase test — prevents "hi" matching inside "him",
+/* Word-boundary phrase test. Prevents "hi" matching inside "him",
    or "rag" matching inside "graphrag". */
 function hasPhrase(q, phrase) {
   return new RegExp(`(^|\\s)${phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s|$)`).test(q);
@@ -292,7 +292,7 @@ async function getAnswer(query) {
       if (!res.ok) throw new Error(res.status);
       return await res.json();   // { answer, tags?, links?, target?, chips? }
     } catch (err) {
-      // graceful degradation — same pattern as the Lette pipeline
+      // graceful degradation, same pattern as the Lette pipeline
       console.warn('Live backend unavailable, falling back to local matcher:', err);
     }
   }
@@ -493,7 +493,7 @@ function jumpTo(id) {
   if (!cv) return;
   const c = cv.getContext('2d');
 
-  // Kept shallow vertically — the strip is only ~40px tall
+  // Kept shallow vertically, since the strip is only ~40px tall
   const LAYERS = [2, 4, 4, 3, 2];
   let nodes = [], edges = [], W = 0, H = 0, dpr = 1;
 
@@ -606,7 +606,7 @@ if (form) {
 
   // Opening message, streamed once the tile scrolls into view
   const greet = {
-    answer: "Hi — ask me anything about Kashish's work and I'll answer from her actual project history, then point you at the right part of the page.",
+    answer: "Hi! Ask me anything about Kashish's work and I'll answer from her actual project history, then point you at the right part of the page.",
     chips: OPENING_CHIPS
   };
 

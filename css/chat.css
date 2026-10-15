@@ -3,7 +3,7 @@
    ============================================================ */
 
 /* Fixed frame. An explicit height (rather than a min/max range) means the
-   tile contributes exactly that much to grid row sizing — so the panel
+   tile contributes exactly that much to grid row sizing, so the panel
    never resizes as the conversation grows, and long answers scroll inside
    .chat-log instead. On desktop this height also drives the two rows it
    spans, keeping hero + info flush with it. */
@@ -56,7 +56,7 @@
   white-space: nowrap;
 }
 
-/* The shared "k" in as(k)ashish — tinted so the pun actually reads */
+/* The shared "k" in as(k)ashish, tinted so the pun actually reads */
 .name-k {
   color: var(--accent2);
   font-weight: 800;
